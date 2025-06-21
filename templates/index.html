@@ -7,7 +7,20 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <!-- Game Rules Popup -->
+
+<!-- Always-visible Rules Panel -->
+<div class="rules-panel">
+  <h2>📜 Rules</h2>
+  <ul>
+    <li>Guess the <strong>5-letter</strong> word in 6 tries.</li>
+    <li>Green: Right letter & spot</li>
+    <li>Yellow: Right letter, wrong spot</li>
+    <li>Grey: Not in word</li>
+    <li>Use keyboard or on-screen keys</li>
+  </ul>
+</div>
+
+<!-- Game Rules Popup (only shown once) -->
 <div id="rules-popup" class="popup">
   <div class="popup-content">
     <h2>📜 How to Play</h2>
@@ -22,21 +35,35 @@
     <button id="startBtn">Start Game</button>
   </div>
 </div>
+<!-- Always-visible Rules Panel -->
+<div class="rules-panel">
+  <h2>📜 Game Rules</h2>
+  <ul>
+    <li> Guess the <strong>5-letter</strong> word in 6 tries.</li>
+    <li><span class="tile green">A</span> = Correct letter & spot</li>
+    <li><span class="tile yellow">A</span> = Correct letter, wrong spot</li>
+    <li><span class="tile grey">A</span> = Not in the word</li>
+    <li>⌨️ Use the on-screen or physical keyboard to play.</li>
+  </ul>
+</div>
 
-  <div class="container">
-    <h1>Wordle</h1>
-    <div id="board" class="board"></div>
-    <div id="keyboard" class="keyboard"></div>
-    <p id="error-message" class="error"></p>
+
+<!-- Main Game Content -->
+<div class="container">
+  <h1>Wordle</h1>
+  <div id="board" class="board"></div>
+  <div id="keyboard" class="keyboard"></div>
+  <p id="error-message" class="error"></p>
+</div>
+
+<!-- Win/Loss Popup -->
+<div id="popup" class="popup hidden">
+  <div class="popup-content">
+    <p id="popup-message"></p>
+    <button id="newGameBtn">New Game</button>
   </div>
+</div>
 
-  <div id="popup" class="popup hidden">
-    <div class="popup-content">
-      <p id="popup-message"></p>
-      <button id="newGameBtn">New Game</button>
-    </div>
-  </div>
-
-  <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
 </body>
 </html>
