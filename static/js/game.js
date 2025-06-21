@@ -142,3 +142,21 @@ window.addEventListener('load', () => {
     sessionStorage.setItem('rulesShown', 'true');
   });
 });
+const mobileInput = document.getElementById('mobileInput');
+
+// Refocus input on interaction
+function focusMobileInput() {
+  setTimeout(() => mobileInput.focus(), 50);
+}
+
+window.addEventListener('load', focusMobileInput);
+document.addEventListener('click', focusMobileInput);
+
+// Handle mobile input typing
+mobileInput.addEventListener('input', (e) => {
+  const letter = e.target.value.toUpperCase();
+  e.target.value = ''; // clear input
+  if (/^[A-Z]$/.test(letter)) {
+    handleKey(letter);
+  }
+});
