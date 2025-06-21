@@ -8,18 +8,6 @@ const popup = document.getElementById('popup');
 const popupMessage = document.getElementById('popup-message');
 const newGameBtn = document.getElementById('newGameBtn');
 const errorMsg = document.getElementById('error-message');
-const mobileInput = document.getElementById('mobile-input');
-
-function isMobileDevice() {
-  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
-}
-
-for (let i = 0; i < 30; i++) {
-  const tile = document.createElement('div');
-  tile.classList.add('tile');
-  tile.setAttribute('id', `tile-${i}`);
-  board.appendChild(tile);
-}
 
 const KEYS = [
   'Q','W','E','R','T','Y','U','I','O','P',
@@ -27,24 +15,33 @@ const KEYS = [
   'Enter','Z','X','C','V','B','N','M','Del'
 ];
 
+// Setup board
+for (let i = 0; i < 30; i++) {
+  const tile = document.createElement('div');
+  tile.classList.add('tile');
+  tile.setAttribute('id', `tile-${i}`);
+  board.appendChild(tile);
+}
+
+// Setup keyboard
 KEYS.forEach(key => {
   const btn = document.createElement('button');
   btn.textContent = key;
   btn.className = 'key';
   if (key === 'Enter' || key === 'Del') btn.classList.add('key-wide');
-  btn.onclick = () => handleKey(key);
+  btn.addEventListener('click', () => handleKey(key));
   keyboard.appendChild(btn);
 });
 
 function handleKey(key) {
   if (!popup.classList.contains('hidden')) return;
 
-  if (key === 'Del' || key === 'Backspace') {
+  if (key === 'Del') {
     currentGuess = currentGuess.slice(0, -1);
   } else if (key === 'Enter') {
     submitGuess();
     return;
-  } else if (/^[A-Z]$/i.test(key) && currentGuess.length < 5) {
+  } else if (/^[a-zA-Z]$/.test(key) && currentGuess.length < 5) {
     currentGuess += key.toLowerCase();
   }
 
@@ -102,9 +99,9 @@ function submitGuess() {
         updateFeedback(data.result);
         errorMsg.textContent = '';
         if (data.win) {
-          showPopup("🎉 You guessed it! Start a new game?");
+          showPopup("You guessed it! Start a new game?");
         } else if (data.reveal) {
-          showPopup(`❌ Out of chances! Word was: ${data.reveal.toUpperCase()}`);
+          showPopup(`Out of chances! Word was: ${data.reveal.toUpperCase()}`);
         }
       }
     })
@@ -112,6 +109,7 @@ function submitGuess() {
       errorMsg.textContent = "Server error. Try again.";
     });
 }
+
 function showPopup(message) {
   popupMessage.textContent = message;
   popup.classList.remove('hidden');
@@ -124,40 +122,63 @@ function resetGame() {
 
 newGameBtn.addEventListener('click', resetGame);
 
-window.addEventListener('load', () => {
-  const rulesPopup = document.getElementById('rules-popup');
-  const startBtn = document.getElementById('startBtn');
+// 🛡️ Prevent double letter entry (especially on mobile)
+let lastHandledKey = null;
+let lastHandledTime = 0;
+function debounceKey(key) {
+  const now = Date.now();
+  if (key === lastHandledKey && now - lastHandledTime < 200) return false;
+  lastHandledKey = key;
+  lastHandledTime = now;
+  return true;
+}
 
-  if (!sessionStorage.getItem('rulesShown')) {
-    rulesPopup.classList.remove('hidden');
-  }
-
-  startBtn.addEventListener('click', () => {
-    rulesPopup.classList.add('hidden');
-    sessionStorage.setItem('rulesShown', 'true');
-    if (isMobileDevice()) {
-      mobileInput.focus();
+// 🔑 Full Keyboard Support (Desktop + Soft Keyboard)
+document.addEventListener('keydown', (e) => {
+  const key = e.key;
+  if (key === 'Enter') return handleKey('Enter');
+  if (key === 'Backspace') return handleKey('Del');
+  if (/^[a-zA-Z]$/.test(key)) {
+    if (debounceKey(key.toUpperCase())) {
+      handleKey(key.toUpperCase());
     }
-  });
-
-  if (isMobileDevice()) {
-    document.body.addEventListener('click', () => mobileInput.focus());
   }
 });
 
-if (isMobileDevice()) {
-  mobileInput.addEventListener('input', (e) => {
-    const value = e.target.value;
-    if (/^[a-zA-Z]$/.test(value)) {
-      handleKey(value.toUpperCase());
-    }
-    e.target.value = '';
+// 🧠 Mobile Soft Keyboard Hack: Invisible input for iOS/Android
+const mobileInput = document.createElement('input');
+mobileInput.type = 'text';
+mobileInput.inputMode = 'text';
+mobileInput.autocapitalize = 'characters';
+mobileInput.style.opacity = '0';
+mobileInput.style.position = 'absolute';
+mobileInput.style.zIndex = '-1';
+mobileInput.style.height = '0';
+document.body.appendChild(mobileInput);
+
+// Focus invisible input to trigger mobile keyboard
+document.body.addEventListener('click', () => {
+  mobileInput.focus();
+});
+
+// Handle mobile input
+mobileInput.addEventListener('input', (e) => {
+  const value = e.target.value.toUpperCase();
+  e.target.value = '';
+  if (/^[A-Z]$/.test(value) && debounceKey(value)) {
+    handleKey(value);
+  }
+});
+
+// Show rules popup only once
+window.addEventListener('load', () => {
+  const rulesPopup = document.getElementById('rules-popup');
+  const startBtn = document.getElementById('startBtn');
+  if (!sessionStorage.getItem('rulesShown')) {
+    rulesPopup.classList.remove('hidden');
+  }
+  startBtn?.addEventListener('click', () => {
+    rulesPopup.classList.add('hidden');
+    sessionStorage.setItem('rulesShown', 'true');
   });
-} else {
-  document.addEventListener('keydown', (e) => {
-    const key = e.key;
-    if (key === 'Enter') handleKey('Enter');
-    else if (key === 'Backspace') handleKey('Del');
-    else if (/^[a-zA-Z]$/.test(key)) handleKey(key.toUpperCase());
-  });
-}
+});
