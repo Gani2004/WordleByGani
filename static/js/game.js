@@ -8,14 +8,12 @@ const popup = document.getElementById('popup');
 const popupMessage = document.getElementById('popup-message');
 const newGameBtn = document.getElementById('newGameBtn');
 const errorMsg = document.getElementById('error-message');
+const mobileInput = document.getElementById('mobile-input');
 
-const KEYS = [
-  'Q','W','E','R','T','Y','U','I','O','P',
-  'A','S','D','F','G','H','J','K','L',
-  'Enter','Z','X','C','V','B','N','M','Del'
-];
+function isMobileDevice() {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+}
 
-// Setup board
 for (let i = 0; i < 30; i++) {
   const tile = document.createElement('div');
   tile.classList.add('tile');
@@ -23,7 +21,12 @@ for (let i = 0; i < 30; i++) {
   board.appendChild(tile);
 }
 
-// Setup keyboard
+const KEYS = [
+  'Q','W','E','R','T','Y','U','I','O','P',
+  'A','S','D','F','G','H','J','K','L',
+  'Enter','Z','X','C','V','B','N','M','Del'
+];
+
 KEYS.forEach(key => {
   const btn = document.createElement('button');
   btn.textContent = key;
@@ -36,12 +39,12 @@ KEYS.forEach(key => {
 function handleKey(key) {
   if (!popup.classList.contains('hidden')) return;
 
-  if (key === 'Del') {
+  if (key === 'Del' || key === 'Backspace') {
     currentGuess = currentGuess.slice(0, -1);
   } else if (key === 'Enter') {
     submitGuess();
     return;
-  } else if (currentGuess.length < 5) {
+  } else if (/^[A-Z]$/i.test(key) && currentGuess.length < 5) {
     currentGuess += key.toLowerCase();
   }
 
@@ -91,25 +94,24 @@ function submitGuess() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ guess: currentGuess })
   })
-  .then(res => res.json())
-  .then(data => {
-    if (data.error) {
-      errorMsg.textContent = data.error;
-    } else {
-      updateFeedback(data.result);
-      errorMsg.textContent = '';
-      if (data.win) {
-        showPopup("🎉 You guessed it! Start a new game?");
-      } else if (data.reveal) {
-        showPopup(`❌ Out of chances! Word was: ${data.reveal.toUpperCase()}`);
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        errorMsg.textContent = data.error;
+      } else {
+        updateFeedback(data.result);
+        errorMsg.textContent = '';
+        if (data.win) {
+          showPopup("🎉 You guessed it! Start a new game?");
+        } else if (data.reveal) {
+          showPopup(`❌ Out of chances! Word was: ${data.reveal.toUpperCase()}`);
+        }
       }
-    }
-  })
-  .catch(() => {
-    errorMsg.textContent = "Server error. Try again.";
-  });
+    })
+    .catch(() => {
+      errorMsg.textContent = "Server error. Try again.";
+    });
 }
-
 function showPopup(message) {
   popupMessage.textContent = message;
   popup.classList.remove('hidden');
@@ -122,13 +124,6 @@ function resetGame() {
 
 newGameBtn.addEventListener('click', resetGame);
 
-// Keyboard input support
-document.addEventListener('keydown', (e) => {
-  const key = e.key;
-  if (key === 'Enter') handleKey('Enter');
-  else if (key === 'Backspace') handleKey('Del');
-  else if (/^[a-zA-Z]$/.test(key)) handleKey(key.toUpperCase());
-});
 window.addEventListener('load', () => {
   const rulesPopup = document.getElementById('rules-popup');
   const startBtn = document.getElementById('startBtn');
@@ -140,23 +135,29 @@ window.addEventListener('load', () => {
   startBtn.addEventListener('click', () => {
     rulesPopup.classList.add('hidden');
     sessionStorage.setItem('rulesShown', 'true');
+    if (isMobileDevice()) {
+      mobileInput.focus();
+    }
   });
-});
-const mobileInput = document.getElementById('mobileInput');
 
-// Refocus input on interaction
-function focusMobileInput() {
-  setTimeout(() => mobileInput.focus(), 50);
-}
-
-window.addEventListener('load', focusMobileInput);
-document.addEventListener('click', focusMobileInput);
-
-// Handle mobile input typing
-mobileInput.addEventListener('input', (e) => {
-  const letter = e.target.value.toUpperCase();
-  e.target.value = ''; // clear input
-  if (/^[A-Z]$/.test(letter)) {
-    handleKey(letter);
+  if (isMobileDevice()) {
+    document.body.addEventListener('click', () => mobileInput.focus());
   }
 });
+
+if (isMobileDevice()) {
+  mobileInput.addEventListener('input', (e) => {
+    const value = e.target.value;
+    if (/^[a-zA-Z]$/.test(value)) {
+      handleKey(value.toUpperCase());
+    }
+    e.target.value = '';
+  });
+} else {
+  document.addEventListener('keydown', (e) => {
+    const key = e.key;
+    if (key === 'Enter') handleKey('Enter');
+    else if (key === 'Backspace') handleKey('Del');
+    else if (/^[a-zA-Z]$/.test(key)) handleKey(key.toUpperCase());
+  });
+}
