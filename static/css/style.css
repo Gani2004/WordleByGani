@@ -1,4 +1,4 @@
-/* ==== Base Reset and Background ==== */
+
 body {
   margin: 0;
   padding: 0;
@@ -11,7 +11,6 @@ body {
   min-height: 100vh;
 }
 
-/* ==== Container and Title ==== */
 .container {
   text-align: center;
   margin-top: 40px;
@@ -23,7 +22,6 @@ h1 {
   color: #f0f0f0;
 }
 
-/* ==== Game Board ==== */
 .board {
   display: grid;
   grid-template-columns: repeat(5, 64px);
@@ -91,19 +89,16 @@ h1 {
   background-color: #a5a6a8;
 }
 
-/* Greyed/used key style */
 .key.used-grey {
   background-color: rgba(255, 255, 255, 0.08) !important;
   color: rgba(255, 255, 255, 0.4) !important;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Extra wide keys */
 .key-wide {
   grid-column: span 2;
 }
 
-/* ==== Error Text ==== */
 .error {
   height: 22px;
   font-size: 0.9rem;
@@ -111,7 +106,6 @@ h1 {
   margin-bottom: 10px;
 }
 
-/* ==== Popup Styling ==== */
 .popup {
   position: fixed;
   inset: 0;
@@ -184,4 +178,76 @@ h1 {
 #startBtn:hover {
   background: linear-gradient(135deg, #0072ff, #00c6ff);
   transform: scale(1.05);
+}
+/* ==== Rules Panel - No Reflection, Clear Graphics ==== */
+.rules-panel {
+  position: fixed;
+  top: 50px;
+  left: 20px;
+  width: 320px;
+  background-color: #1e1e1f; /* Solid dark background */
+  border: 2px solid #2c2c2e;
+  border-radius: 16px;
+  padding: 24px;
+  color: #ffffff;
+  font-size: 1rem;
+  line-height: 1.7;
+  z-index: 100;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.rules-panel h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  text-align: center;
+  border-bottom: 2px solid #3a3a3a;
+  padding-bottom: 8px;
+}
+
+.rules-panel ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.rules-panel li {
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.rules-panel .tile {
+  width: 34px;
+  height: 34px;
+  margin-right: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.rules-panel .green {
+  background-color: #6aaa64;
+  border: 2px solid #6aaa64;
+}
+
+.rules-panel .yellow {
+  background-color: #c9b458;
+  border: 2px solid #c9b458;
+}
+
+.rules-panel .grey {
+  background-color: #787c7e;
+  border: 2px solid #787c7e;
+}
+
+@media (max-width: 768px) {
+  .rules-panel {
+    display: none;
+  }
 }
