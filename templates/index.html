@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+<input type="text" id="mobileInput" autocomplete="off" autocapitalize="characters" maxlength="1" inputmode="text" style="position:absolute; opacity:0; pointer-events:none;">
 
+  <!-- Always-visible Rules Panel -->
   <div class="rules-panel">
     <h2>Game Rules</h2>
     <ul>
@@ -19,9 +21,11 @@
     </ul>
   </div>
 
+  <!-- One-time Rules Popup with Video -->
   <div id="rules-popup" class="popup">
     <div class="popup-content with-video">
       
+      <!-- Rules Text -->
       <div class="rules-text">
         <h2>How to Play</h2>
         <p>Guess the <strong>5-letter word</strong> in 6 tries.</p>
@@ -45,12 +49,15 @@
     </div>
   </div>
 
+  <!-- Main Game Container -->
   <div class="container">
     <h1>Wordle</h1>
     <div id="board" class="board"></div>
     <div id="keyboard" class="keyboard"></div>
     <p id="error-message" class="error"></p>
   </div>
+
+  <!-- Popup for Win/Loss Message -->
   <div id="popup" class="popup hidden">
     <div class="popup-content">
       <p id="popup-message"></p>
@@ -58,6 +65,7 @@
     </div>
   </div>
 
+  <!-- Game Logic -->
   <script src="{{ url_for('static', filename='js/game.js') }}"></script>
 </body>
 </html>
