@@ -47,7 +47,6 @@ h1 {
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* ==== Tile Colors ==== */
 .green {
   background-color: #538d4e !important;
   border-color: #538d4e !important;
@@ -63,7 +62,6 @@ h1 {
   border-color: #3a3a3c !important;
 }
 
-/* ==== Keyboard ==== */
 .keyboard {
   display: grid;
   grid-template-columns: repeat(10, 40px);
@@ -179,7 +177,7 @@ h1 {
   background: linear-gradient(135deg, #0072ff, #00c6ff);
   transform: scale(1.05);
 }
-/* ==== Rules Panel - No Reflection, Clear Graphics ==== */
+
 .rules-panel {
   position: fixed;
   top: 50px;
@@ -231,6 +229,7 @@ h1 {
   color: white;
 }
 
+/* Solid Tile Colors */
 .rules-panel .green {
   background-color: #6aaa64;
   border: 2px solid #6aaa64;
@@ -246,8 +245,49 @@ h1 {
   border: 2px solid #787c7e;
 }
 
+/* Hide rules panel on small screens */
 @media (max-width: 768px) {
   .rules-panel {
     display: none;
+  }
+}
+/* === Popup Layout with Video === */
+.popup-content.with-video {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.rules-text {
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
+.rules-video {
+  flex: 1 1 280px;
+  max-width:600px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+}
+
+.rules-video video {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  .popup-content.with-video {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .rules-video, .rules-text {
+    max-width: 100%;
+    text-align: center;
   }
 }
