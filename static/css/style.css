@@ -1,0 +1,187 @@
+/* ==== Base Reset and Background ==== */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #0f0f10;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+}
+
+/* ==== Container and Title ==== */
+.container {
+  text-align: center;
+  margin-top: 40px;
+}
+
+h1 {
+  font-size: 2.8rem;
+  margin-bottom: 30px;
+  color: #f0f0f0;
+}
+
+/* ==== Game Board ==== */
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 64px);
+  grid-template-rows: repeat(6, 64px);
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.tile {
+  width: 64px;
+  height: 64px;
+  background-color: #121213;
+  border: 2px solid #3a3a3c;
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+/* ==== Tile Colors ==== */
+.green {
+  background-color: #538d4e !important;
+  border-color: #538d4e !important;
+}
+
+.yellow {
+  background-color: #b59f3b !important;
+  border-color: #b59f3b !important;
+}
+
+.grey {
+  background-color: #3a3a3c !important;
+  border-color: #3a3a3c !important;
+}
+
+/* ==== Keyboard ==== */
+.keyboard {
+  display: grid;
+  grid-template-columns: repeat(10, 40px);
+  gap: 8px;
+  justify-content: center;
+  padding: 10px 0 20px;
+}
+
+.key {
+  background-color: #818384;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 0;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.key:hover {
+  transform: translateY(-2px);
+  background-color: #a5a6a8;
+}
+
+/* Greyed/used key style */
+.key.used-grey {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Extra wide keys */
+.key-wide {
+  grid-column: span 2;
+}
+
+/* ==== Error Text ==== */
+.error {
+  height: 22px;
+  font-size: 0.9rem;
+  color: #ff4f4f;
+  margin-bottom: 10px;
+}
+
+/* ==== Popup Styling ==== */
+.popup {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.popup.hidden {
+  display: none;
+}
+
+.popup-content {
+  background: rgba(28, 28, 30, 0.9);
+  backdrop-filter: blur(8px);
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  animation: popupIn 0.3s ease-out;
+}
+
+.popup-content p {
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+#newGameBtn {
+  padding: 10px 22px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#newGameBtn:hover {
+  background: #1d4ed8;
+}
+
+@keyframes popupIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+#startBtn {
+  margin-top: 1.5rem;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #ffffff;
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 114, 255, 0.3);
+}
+
+#startBtn:hover {
+  background: linear-gradient(135deg, #0072ff, #00c6ff);
+  transform: scale(1.05);
+}

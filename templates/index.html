@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Flask Wordle</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Game Rules Popup -->
+<div id="rules-popup" class="popup">
+  <div class="popup-content">
+    <h2>📜 How to Play</h2>
+    <p>Guess the <strong>5-letter word</strong> in 6 tries.</p>
+    <ul style="text-align: left;">
+      <li>Each guess must be a valid word.</li>
+      <li>After each guess, tiles show how close you were:</li>
+      <li><span class="tile green">A</span> Correct letter, correct spot</li>
+      <li><span class="tile yellow">A</span> Correct letter, wrong spot</li>
+      <li><span class="tile grey">A</span> Letter not in the word</li>
+    </ul>
+    <button id="startBtn">Start Game</button>
+  </div>
+</div>
+
+  <div class="container">
+    <h1>Flask Wordle</h1>
+    <div id="board" class="board"></div>
+    <div id="keyboard" class="keyboard"></div>
+    <p id="error-message" class="error"></p>
+  </div>
+
+  <div id="popup" class="popup hidden">
+    <div class="popup-content">
+      <p id="popup-message"></p>
+      <button id="newGameBtn">New Game</button>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</body>
+</html>
